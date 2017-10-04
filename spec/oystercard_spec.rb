@@ -58,5 +58,14 @@ describe Oystercard do
         expect{ subject.touch_in }.to raise_error "Insufficient balance"
       end
 
+      it 'is charged on touch out' do
+        card = Oystercard.new
+        card.top_up(10)
+        card.touch_in
+        card.touch_out
+        expect(card.balance).to eq 9
+
+      end
+
     end
 end
