@@ -2,22 +2,19 @@ require './lib/oystercard'
 
 describe Oystercard do
   context 'balance' do
-
     it 'can hold a balance' do
       expect(subject).to respond_to :balance
     end
-
     it 'is created with a balance of 0' do
       expect(subject.balance).to eq 0
     end
+  end
 
     context 'top up' do
       it { is_expected.to respond_to(:top_up).with(1).argument}
-
       it 'can top up the balance' do
         expect{ subject.top_up 10 }.to change{ subject.balance }.by 10
       end
-
       it 'will have a maximum balance' do
         maximum_balance = Oystercard::MAXIMUM_BALANCE
         subject.top_up(maximum_balance)
@@ -25,13 +22,33 @@ describe Oystercard do
       end
     end
 
+    context 'charge' do
+      it { is_expected.to respond_to(:charge).with(1).argument}
+      it 'can deduct balance' do
+        subject.top_up(10)
+        subject.charge(5)
+        expect(subject.balance).to eq 5
+      end
+    end
 
+    context 'journey' do
 
+      it 'is initialized not in a journey' do
+        expect(subject.in_journey?).to eq false
+      end
+      it 'can be in journey' do
+      expect(subject).to respond_to :in_journey?
+    end
 
+      it 'can be touched in to start a journey' do
+        subject.touch_in
+        expect(subject.in_journey?).to eq true
+      end
+      it 'can be touched out to end a journey' do
+        subject.touch_in
+        subject.touch_out
+        expect(subject.in_journey?).to eq false
+      end
 
-
-
-
-
-  end
+    end
 end
