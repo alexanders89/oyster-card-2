@@ -41,13 +41,21 @@ describe Oystercard do
     end
 
       it 'can be touched in to start a journey' do
-        subject.touch_in
-        expect(subject.in_journey?).to eq true
+        card = Oystercard.new
+        card.top_up(10)
+        card.touch_in
+        expect(card.in_journey?).to eq true
       end
       it 'can be touched out to end a journey' do
-        subject.touch_in
+        card = Oystercard.new
+        card.top_up(10)
+        card.touch_in
         subject.touch_out
         expect(subject.in_journey?).to eq false
+      end
+
+      it 'cannot be started unless card has minimum balance' do
+        expect{ subject.touch_in }.to raise_error "Insufficient balance"
       end
 
     end
