@@ -1,20 +1,17 @@
+require './lib/journey'
+
 class Oystercard
 
   MAXIMUM_BALANCE = 100
   MINIMUM_CHARGE = 1
 
 
-  attr_reader :balance, :in_journey, :record
+  attr_reader :balance, :journey
 
   def initialize(balance)
     @balance = balance
     @in_journey = false
-    @record = {}
-    @live_journey = []
-  end
-
-  def live_journey
-    @live_journey
+    @journey = journey
   end
 
   def in_journey?
@@ -28,22 +25,18 @@ class Oystercard
 
   def charge(amount)
     @balance -= amount
-    @live_journey << amount
   end
 
   def touch_in(station)
     fail "Insufficient balance" if @balance < MINIMUM_CHARGE
+    @journey = Journey.new(station)
     @in_journey = true
-    @live_journey << station
-
   end
 
   def touch_out(station)
     @in_journey = false
-    @live_journey << station
+    @journey.finish(station)
     charge(MINIMUM_CHARGE)
-    @record["Journey:#{@record.count + 1}"] = @live_journey
-    @live_journey = []
   end
 
 
