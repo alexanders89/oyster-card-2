@@ -6,7 +6,7 @@ class Oystercard
   MINIMUM_CHARGE = 1
 
 
-  attr_reader :balance, :journey
+  attr_accessor :balance, :journey
 
   def initialize(balance)
     @balance = balance
@@ -34,8 +34,8 @@ class Oystercard
   end
 
   def touch_out(station)
-    @in_journey = false
     @journey.finish(station)
+    @in_journey = false
     charge(MINIMUM_CHARGE)
   end
 
