@@ -4,7 +4,7 @@ class Oystercard
   MINIMUM_CHARGE = 1
 
 
-  attr_reader :balance, :in_journey
+  attr_reader :balance, :in_journey, :record
 
   def initialize(balance)
     @balance = balance
@@ -34,7 +34,6 @@ class Oystercard
   def touch_in(station)
     fail "Insufficient balance" if @balance < MINIMUM_CHARGE
     @in_journey = true
-    @entry_station = station
     @live_journey << station
 
   end
@@ -43,7 +42,8 @@ class Oystercard
     @in_journey = false
     @live_journey << station
     charge(MINIMUM_CHARGE)
-
+    @record["Journey:#{@record.count + 1}"] = @live_journey
+    @live_journey = []
   end
 
 

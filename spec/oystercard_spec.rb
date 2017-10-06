@@ -4,8 +4,6 @@ describe Oystercard do
   let(:station){ double :station}
   subject(:card) {described_class.new(20)}
 
-
-
   context 'balance' do
     it 'can hold a balance' do
       expect(card).to respond_to :balance
@@ -68,17 +66,25 @@ describe Oystercard do
           card.touch_in(station)
           expect(card.live_journey[0]).to eq station
         end
+        let(:entry_station) { double :station }
+        let(:exit_station) { double :station }
+        it 'can store the entry and exit station and a journey' do
+          card.touch_in(entry_station)
+          card.touch_out(exit_station)
+          expect(card.record['Journey:1'][1]).to eq exit_station
+        end
+
+        it 'stores the charge for a journey' do
+          card.touch_in(entry_station)
+          card.touch_out(exit_station)
+          expect(card.record['Journey:1'][2]).to eq 1
+        end
+
+        it 'stores all compelte journeys' do
+          card.touch_in(entry_station)
+          card.touch_out(exit_station)
+          expect(card.live_journey.count).to eq 0
+        end
       end
-      let(:entry_station) { double :station }
-      let(:exit_station) { double :station }
-      it 'can store the entry and exit station and a journey' do
-        card.touch_in(entry_station)
-        card.touch_out(exit_station)
-        expect(card.live_journey[1]).to eq exit_station
-
-      end
-
-
-
     end
 end
